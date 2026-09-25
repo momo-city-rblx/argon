@@ -42,6 +42,7 @@ pub mod txt;
 pub mod yaml;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub enum Middleware {
 	Project,
 	InstanceData,
@@ -49,6 +50,8 @@ pub enum Middleware {
 	ServerScript,
 	ClientScript,
 	ModuleScript,
+	LegacyServerScript,
+	LegacyClientScript,
 
 	StringValue,
 	RichStringValue,
@@ -76,7 +79,11 @@ impl Middleware {
 			Middleware::Project => project::read_project(path, vfs),
 			Middleware::InstanceData => unreachable!(),
 			//
-			Middleware::ServerScript | Middleware::ClientScript | Middleware::ModuleScript => {
+			Middleware::ServerScript
+			| Middleware::ClientScript
+			| Middleware::ModuleScript
+			| Middleware::LegacyServerScript
+			| Middleware::LegacyClientScript => {
 				luau::read_luau(path, context, vfs, self.clone().into())
 			}
 			//
@@ -104,7 +111,11 @@ impl Middleware {
 
 	pub fn write(&self, properties: Properties, path: &Path, vfs: &Vfs) -> Result<Properties> {
 		match self {
-			Middleware::ServerScript | Middleware::ClientScript | Middleware::ModuleScript => {
+			Middleware::ServerScript
+			| Middleware::ClientScript
+			| Middleware::ModuleScript
+			| Middleware::LegacyServerScript
+			| Middleware::LegacyClientScript => {
 				luau::write_luau(properties, path, vfs)
 			}
 			Middleware::StringValue => txt::write_txt(properties, path, vfs),
