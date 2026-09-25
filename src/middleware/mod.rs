@@ -83,9 +83,7 @@ impl Middleware {
 			| Middleware::ClientScript
 			| Middleware::ModuleScript
 			| Middleware::LegacyServerScript
-			| Middleware::LegacyClientScript => {
-				luau::read_luau(path, context, vfs, self.clone().into())
-			}
+			| Middleware::LegacyClientScript => luau::read_luau(path, context, vfs, self.clone().into()),
 			//
 			Middleware::StringValue => txt::read_txt(path, vfs),
 			Middleware::RichStringValue => md::read_md(path, vfs),
@@ -115,9 +113,7 @@ impl Middleware {
 			| Middleware::ClientScript
 			| Middleware::ModuleScript
 			| Middleware::LegacyServerScript
-			| Middleware::LegacyClientScript => {
-				luau::write_luau(properties, path, vfs)
-			}
+			| Middleware::LegacyClientScript => luau::write_luau(properties, path, vfs),
 			Middleware::StringValue => txt::write_txt(properties, path, vfs),
 			Middleware::LocalizationTable => csv::write_csv(properties, path, vfs),
 			// TODO: Add support for other middleware

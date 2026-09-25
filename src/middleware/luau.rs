@@ -39,7 +39,9 @@ pub fn read_luau(path: &Path, context: &Context, vfs: &Vfs, script_type: ScriptT
 	let (class_name, run_context) = match (context.use_legacy_scripts(), &script_type) {
 		(false, ScriptType::Server) => ("Script", Some(Variant::Enum(Enum::from_u32(1)))),
 		(false, ScriptType::Client) => ("Script", Some(Variant::Enum(Enum::from_u32(2)))),
-		(true, ScriptType::Server) | (_, ScriptType::LegacyServer) => ("Script", Some(Variant::Enum(Enum::from_u32(0)))),
+		(true, ScriptType::Server) | (_, ScriptType::LegacyServer) => {
+			("Script", Some(Variant::Enum(Enum::from_u32(0))))
+		}
 		(true, ScriptType::Client) | (_, ScriptType::LegacyClient) => ("LocalScript", None),
 		(_, ScriptType::Module) => ("ModuleScript", None),
 	};

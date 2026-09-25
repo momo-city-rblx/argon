@@ -304,15 +304,15 @@ impl SyncRule {
 		let child_matches = if let Some(child_pattern) = &self.child_pattern {
 			child_pattern.matches_path(stripped_path)
 		} else if let Some(suffix) = &self.suffix {
-			stripped_path.to_str().map(|s| s == format!("init{suffix}")).unwrap_or(false)
+			stripped_path
+				.to_str()
+				.map(|s| s == format!("init{suffix}"))
+				.unwrap_or(false)
 		} else {
 			false
 		};
 
-		if child_matches
-			&& !self.is_excluded(path)
-			&& self.middleware != Middleware::InstanceData
-		{
+		if child_matches && !self.is_excluded(path) && self.middleware != Middleware::InstanceData {
 			return Some(ResolvedSyncRule {
 				middleware: self.middleware.clone(),
 				name: path.get_parent().get_name().to_owned(),
